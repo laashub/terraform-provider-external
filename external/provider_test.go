@@ -3,9 +3,15 @@ package external
 import (
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+var testProviders = map[string]terraform.ResourceProvider{
+	"external": Provider(),
+}
 
 func TestProvider(t *testing.T) {
 	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
@@ -13,6 +19,7 @@ func TestProvider(t *testing.T) {
 	}
 }
 
-var testProviders = map[string]terraform.ResourceProvider{
-	"external": Provider(),
+func TestMain(m *testing.M) {
+	acctest.UseBinaryDriver("external", Provider)
+	resource.TestMain(m)
 }
